@@ -21,6 +21,9 @@ typedef enum : NSUInteger {
 
 + (BugReportKit *)sharedInstance;
 
+@property (nonatomic, strong) NSString *subject;
+@property (nonatomic, strong) NSString *body;
+
 typedef void(^bugReporting)();
 typedef void(^bugReportingFailed)(NSError *error);
 

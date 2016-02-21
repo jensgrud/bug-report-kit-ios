@@ -20,8 +20,6 @@
 @property (nonatomic, assign) BugKitGesture gesture;
 @property (nonatomic, strong) DDFileLogger *fileLogger;
 @property (nonatomic, strong) NSString *reportingAddress;
-@property (nonatomic, strong) NSString *subject;
-@property (nonatomic, strong) NSString *body;
 
 @property (nonatomic, copy) bugReporting(bugReportingBegan);
 @property (nonatomic, copy) bugReporting(bugReportingSucceeded);
