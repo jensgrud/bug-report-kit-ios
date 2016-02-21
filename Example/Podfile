@@ -1,0 +1,6 @@
+xcodeproj 'Example'
+
+target 'Example' do
+  platform :ios, '8.0'
+  pod 'bug-report-kit-ios', :git => 'https://github.com/jensgrud/bug-report-kit-ios.git'
+end
