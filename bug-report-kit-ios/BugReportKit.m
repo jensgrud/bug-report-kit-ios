@@ -20,9 +20,12 @@
 @property (nonatomic, assign) BugKitGesture gesture;
 @property (nonatomic, strong) DDFileLogger *fileLogger;
 @property (nonatomic, strong) NSString *reportingAddress;
+@property (nonatomic, strong) NSString *subject;
+@property (nonatomic, strong) NSString *body;
 
+@property (nonatomic, copy) bugReporting(bugReportingBegan);
+@property (nonatomic, copy) bugReporting(bugReportingSucceeded);
 @property (nonatomic, copy) bugReportingFailed(bugReportingFailed);
-@property (nonatomic, copy) bugReportingSucceeded(bugReportingSucceeded);
 
 @end
 
@@ -61,14 +64,18 @@
 
 - (void)enableWithEmail:(NSString *)email gesture:(BugKitGesture)gesture
 {
-    [self enableWithEmail:email gesture:gesture succeeded:nil failed:nil];
+    [self enableWithEmail:email gesture:gesture subject:@"" body:@"" began:nil succeeded:nil failed:nil];
 }
 
-- (void)enableWithEmail:(NSString *)email gesture:(BugKitGesture)gesture succeeded:(bugReportingSucceeded)succeeded failed:(bugReportingFailed)failed
+- (void)enableWithEmail:(NSString *)email gesture:(BugKitGesture)gesture subject:(NSString *)subject body:(NSString *)body began:(bugReporting)began succeeded:(bugReporting)succeeded failed:(bugReportingFailed)failed
 {
     self.enabled = YES;
     self.gesture = gesture;
     self.reportingAddress = email;
+    self.subject = subject;
+    self.body = body;
+    
+    self.bugReportingBegan = began;
     self.bugReportingSucceeded = succeeded;
     self.bugReportingFailed = failed;
     
@@ -148,6 +155,12 @@
     if (sender.state == UIGestureRecognizerStateRecognized) {
         
         [self report];
+        
+    } else if (sender.state == UIGestureRecognizerStateBegan) {
+        
+        if (self.bugReportingBegan) {
+            self.bugReportingBegan();
+        }
     }
 }
 
@@ -162,6 +175,9 @@
     MFMailComposeViewController *mailComposer = [[MFMailComposeViewController alloc] init];
     [mailComposer.navigationBar setTintColor:[UIColor whiteColor]];
     mailComposer.mailComposeDelegate = self;
+    
+    [mailComposer setSubject:self.subject];
+    [mailComposer setMessageBody:self.body isHTML:NO];
     
     NSData *noteData = [NSData dataWithContentsOfFile:self.fileLogger.currentLogFileInfo.filePath];
     

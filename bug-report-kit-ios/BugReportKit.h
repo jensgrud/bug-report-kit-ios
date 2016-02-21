@@ -21,10 +21,10 @@ typedef enum : NSUInteger {
 
 + (BugReportKit *)sharedInstance;
 
-typedef void(^bugReportingSucceeded)();
+typedef void(^bugReporting)();
 typedef void(^bugReportingFailed)(NSError *error);
 
 - (void)enableWithEmail:(NSString *)email gesture:(BugKitGesture)gesture;
-- (void)enableWithEmail:(NSString *)email gesture:(BugKitGesture)gesture succeeded:(bugReportingSucceeded)succeeded failed:(bugReportingFailed)failed;
+- (void)enableWithEmail:(NSString *)email gesture:(BugKitGesture)gesture subject:(NSString *)subject body:(NSString *)body began:(bugReporting)began succeeded:(bugReporting)succeeded failed:(bugReportingFailed)failed;
 
 @end

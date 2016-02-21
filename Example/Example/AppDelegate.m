@@ -20,11 +20,7 @@
     
 #ifdef DEBUG
     
-    [[BugReportKit sharedInstance] enableWithEmail:@"report@example.com" gesture:BugKitGestureLongPress succeeded:^{
-        
-    } failed:^(NSError *error) {
-        
-    }];
+    [[BugReportKit sharedInstance] enableWithEmail:@"report@example.com" gesture:BugKitGestureLongPress];
     
 #endif
     
