@@ -52,6 +52,9 @@
         _fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
         [DDLog addLogger:_fileLogger];
         
+        [DDASLLogCapture setCaptureLevel:DDLogLevelAll];
+        [DDASLLogCapture start];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidBecomeVisible:) name:UIWindowDidBecomeVisibleNotification object:nil];
     }
     
