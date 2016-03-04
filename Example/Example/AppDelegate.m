@@ -20,7 +20,20 @@
     
 #ifdef DEBUG
     
-    [[BugReportKit sharedInstance] enableWithEmail:@"report@example.com" gesture:BugKitGestureLongPress];
+    [[BugReportKit sharedInstance] enableWithEmails:@[@"info@example.com"] gesture:BugKitGestureLongPress subject:@"" body:@"" began:^(BugReportKit *instance) {
+        
+        // Overide subject and body
+        instance.subject = @"Dynamic header";
+        instance.body = @"Dynamic body";
+        
+    } succeeded:^(BugReportKit *instance) {
+        
+        // Successfully sent
+        
+    } failed:^(BugReportKit *instance, NSError *error) {
+        
+        // Failed
+    }];
     
 #endif
     

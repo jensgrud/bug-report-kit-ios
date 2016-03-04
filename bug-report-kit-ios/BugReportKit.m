@@ -19,7 +19,6 @@
 @property (nonatomic, assign) BOOL enabled;
 @property (nonatomic, assign) BugKitGesture gesture;
 @property (nonatomic, strong) DDFileLogger *fileLogger;
-@property (nonatomic, strong) NSString *reportingAddress;
 
 @property (nonatomic, copy) bugReporting(bugReportingBegan);
 @property (nonatomic, copy) bugReporting(bugReportingSucceeded);
@@ -63,16 +62,16 @@
 
 #pragma mark Configure
 
-- (void)enableWithEmail:(NSString *)email gesture:(BugKitGesture)gesture
+- (void)enableWithEmails:(NSArray *)emails gesture:(BugKitGesture)gesture
 {
-    [self enableWithEmail:email gesture:gesture subject:@"" body:@"" began:nil succeeded:nil failed:nil];
+    [self enableWithEmails:emails gesture:gesture subject:@"" body:@"" began:nil succeeded:nil failed:nil];
 }
 
-- (void)enableWithEmail:(NSString *)email gesture:(BugKitGesture)gesture subject:(NSString *)subject body:(NSString *)body began:(bugReporting)began succeeded:(bugReporting)succeeded failed:(bugReportingFailed)failed
+- (void)enableWithEmails:(NSArray *)emails gesture:(BugKitGesture)gesture subject:(NSString *)subject body:(NSString *)body began:(bugReporting)began succeeded:(bugReporting)succeeded failed:(bugReportingFailed)failed
 {
     self.enabled = YES;
     self.gesture = gesture;
-    self.reportingAddress = email;
+    self.reportingAddresses = emails;
     self.subject = subject;
     self.body = body;
     
@@ -160,7 +159,7 @@
     } else if (sender.state == UIGestureRecognizerStateBegan) {
         
         if (self.bugReportingBegan) {
-            self.bugReportingBegan();
+            self.bugReportingBegan(self);
         }
     }
 }
@@ -182,7 +181,7 @@
     
     NSData *noteData = [NSData dataWithContentsOfFile:self.fileLogger.currentLogFileInfo.filePath];
     
-    [mailComposer setToRecipients:@[self.reportingAddress]];
+    [mailComposer setToRecipients:self.reportingAddresses];
     [mailComposer addAttachmentData:[self screenshot] mimeType:@"image/png" fileName:@"screenshot.png"];
     [mailComposer addAttachmentData:noteData mimeType:@"text/plain" fileName:@"console.log"];
     
@@ -200,12 +199,12 @@
             break;
         case MFMailComposeResultSent:
             if (self.bugReportingSucceeded) {
-                self.bugReportingSucceeded();
+                self.bugReportingSucceeded(self);
             }
             break;
         case MFMailComposeResultFailed:
             if (self.bugReportingFailed) {
-                self.bugReportingFailed(error);
+                self.bugReportingFailed(self, error);
             }
             break;
         default:
