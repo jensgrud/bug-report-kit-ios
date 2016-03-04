@@ -185,6 +185,16 @@
     [mailComposer addAttachmentData:[self screenshot] mimeType:@"image/png" fileName:@"screenshot.png"];
     [mailComposer addAttachmentData:noteData mimeType:@"text/plain" fileName:@"console.log"];
     
+    NSDictionary *userInfo = @{
+                               @"appVersion" : [BugReportKit appVersion],
+                               @"build" : [BugReportKit build],
+                               @"systemVersion" : [UIDevice currentDevice].systemVersion
+                               };
+    
+    NSData *json = [NSJSONSerialization dataWithJSONObject:userInfo options:NSJSONWritingPrettyPrinted error:nil];
+    
+    [mailComposer addAttachmentData:json mimeType:@"text/json" fileName:@"info.json"];
+    
     [self.window.rootViewController presentViewController:mailComposer animated:YES completion:^{
         
     }];
@@ -232,6 +242,18 @@
     UIGraphicsEndImageContext();
     
     return UIImagePNGRepresentation(image);
+}
+
+#pragma mark
+
++ (NSString *)appVersion
+{
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+}
+
++ (NSString *)build
+{
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
 }
 
 @end
