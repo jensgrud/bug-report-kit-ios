@@ -13,5 +13,5 @@ Pod::Spec.new do |s|
   s.source_files = 'bug-report-kit-ios/*.{h,m}'
   s.requires_arc = true
 
-  s.dependency 'CocoaLumberjack', '~> 2.2.0'
+  s.dependency 'CocoaLumberjack'
 end
